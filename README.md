@@ -1,1 +1,1 @@
-# [https://www.howtographql.com/](GraphQL) practice with Node, React, Apollo and Prisma
+# [GraphQL](https://www.howtographql.com/) practice with Node, React, Apollo and Prisma
