@@ -1,23 +1,13 @@
 const { GraphQLServer } = require("graphql-yoga");
 const { Prisma } = require("prisma-binding");
+const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutation");
+const AuthPayload = require("./resolvers/AuthPayload");
 
 const resolvers = {
-    Query: {
-        info: () => `This is the API of a Hackernews Clone`,
-        feed: (root, args, context, info) => context.db.query.links({}, info)
-    },
-    Mutation: {
-        post: (root, args, context, info) =>
-            context.db.mutation.createLink(
-                {
-                    data: {
-                        url: args.url,
-                        description: args.description
-                    }
-                },
-                info
-            )
-    }
+    Query,
+    Mutation,
+    AuthPayload
 };
 
 const server = new GraphQLServer({
@@ -26,9 +16,9 @@ const server = new GraphQLServer({
     context: req => ({
         ...req,
         db: new Prisma({
-            typeDefs: 'src/generated/prisma.graphql',
-            endpoint: 'http://localhost:4466/hackernews-node/dev',
-            secret: 'ouuyeahbabyitstripple',
+            typeDefs: "src/generated/prisma.graphql",
+            endpoint: "http://localhost:4466/hackernews-node/dev",
+            secret: "ouuyeahbabyitstripple",
             debug: true
         })
     })
