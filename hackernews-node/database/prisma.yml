@@ -1,0 +1,5 @@
+service: hackernews-node
+stage: dev
+datamodel: datamodel.graphql
+secret: ouuyeahbabyitstripple
+cluster: local
