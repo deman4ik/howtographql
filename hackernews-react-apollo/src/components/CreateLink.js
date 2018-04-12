@@ -20,6 +20,7 @@ class CreateLink extends Component {
         url
       }
     });
+    this.props.history.push("/");
   }
 
   render() {
@@ -48,7 +49,10 @@ class CreateLink extends Component {
 }
 
 CreateLink.propTypes = {
-  postMutation: PropTypes.func.isRequired
+  postMutation: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const POST_MUTATION = gql`
