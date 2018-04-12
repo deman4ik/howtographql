@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Lnk = props => {
+  const voteForLink = async () => {
+    // ... you'll implement this in chapter 6
+  };
   const { description, url } = props.link;
   return (
     <div>
