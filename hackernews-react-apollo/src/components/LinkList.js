@@ -4,7 +4,37 @@ import gql from "graphql-tag";
 import PropTypes from "prop-types";
 import Lnk from "./Lnk";
 
+export const FEED_QUERY = gql`
+  query FeedQuery {
+    feed {
+      links {
+        id
+        createdAt
+        url
+        description
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
 const LinkList = props => {
+  const updateCacheAfterVote = (store, createVote, linkId) => {
+    const data = store.readQuery({ query: FEED_QUERY });
+    const votedLink = data.feed.links.find(link => link.id === linkId);
+    votedLink.votes = createVote.link.votes;
+
+    store.writeQuery({ query: FEED_QUERY, data });
+  };
   if (props.feedQuery && props.feedQuery.loading) {
     return <div>Loading</div>;
   }
@@ -13,7 +43,16 @@ const LinkList = props => {
   }
   const linksToRender = props.feedQuery.feed.links;
   return (
-    <div>{linksToRender.map(link => <Lnk key={link.id} link={link} />)}</div>
+    <div>
+      {linksToRender.map((link, index) => (
+        <Lnk
+          key={link.id}
+          updateStoreAfterVote={updateCacheAfterVote}
+          index={index}
+          link={link}
+        />
+      ))}
+    </div>
   );
 };
 
@@ -26,18 +65,5 @@ LinkList.propTypes = {
     })
   }).isRequired
 };
-
-const FEED_QUERY = gql`
-  query FeedQuery {
-    feed {
-      links {
-        id
-        createdAt
-        url
-        description
-      }
-    }
-  }
-`;
 
 export default graphql(FEED_QUERY, { name: "feedQuery" })(LinkList);
