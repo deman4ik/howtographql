@@ -10,6 +10,7 @@
         "prettier/prettier": "error",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "no-unused-vars": "warn",
+        "react/no-unused-state": "warn",
         "class-methods-use-this": "off",
         "jsx-a11y/anchor-is-valid": "off"
     }

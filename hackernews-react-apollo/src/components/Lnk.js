@@ -42,7 +42,10 @@ const Lnk = props => {
     </div>
   );
 };
-
+Lnk.defaultProps = {
+  voteMutation: null,
+  updateStoreAfterVote: null
+};
 Lnk.propTypes = {
   index: PropTypes.number.isRequired,
   link: PropTypes.shape({
@@ -55,8 +58,8 @@ Lnk.propTypes = {
     createdAt: PropTypes.string,
     votes: PropTypes.array
   }).isRequired,
-  voteMutation: PropTypes.func.isRequired,
-  updateStoreAfterVote: PropTypes.func.isRequired
+  voteMutation: PropTypes.func,
+  updateStoreAfterVote: PropTypes.func
 };
 
 const VOTE_MUTATION = gql`
