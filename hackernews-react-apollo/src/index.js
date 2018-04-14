@@ -5,7 +5,9 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client"; // eslint-disable-line
 import { HttpLink } from "apollo-link-http"; // eslint-disable-line
 import { InMemoryCache } from "apollo-cache-inmemory"; // eslint-disable-line
-import { ApolloLink } from "apollo-client-preset";
+import { ApolloLink, split } from "apollo-client-preset";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities"; // eslint-disable-line
 import { AUTH_TOKEN } from "./constants";
 import "./styles/index.css";
 import App from "./components/App";
@@ -26,8 +28,27 @@ const middlewareAuthLink = new ApolloLink((operation, forward) => {
 
 const httpLinkWuthAuthToken = middlewareAuthLink.concat(httpLink);
 
+const wsLink = new WebSocketLink({
+  uri: "ws://localhost:4000",
+  options: {
+    reconnect: true,
+    connectionParams: {
+      authToken: localStorage.getItem(AUTH_TOKEN)
+    }
+  }
+});
+
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  httpLinkWuthAuthToken
+);
+
 const client = new ApolloClient({
-  link: httpLinkWuthAuthToken,
+  link,
   cache: new InMemoryCache()
 });
 
